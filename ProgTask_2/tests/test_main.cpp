@@ -42,7 +42,7 @@ TEST(InteriorPointTest, SolveAndPrintResultsTest) {
                                 "Z: 4.26\n";
 
   // Create an instance of InteriorPoint
-  InteriorPoint ip(0.5, 1);
+  InteriorPoint ip(0.5, 1e-6);
   ip.readProblem(startingPoint, C, A, b);
   ip.solve(); // Execute solve method
 
