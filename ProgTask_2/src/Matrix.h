@@ -14,15 +14,15 @@ public:
   Matrix(int rows, int cols, Matrix &A, Matrix &B); // Augmented Matrix
   friend std::ostream &operator<<(std::ostream &os, const Matrix &m);
   friend std::istream &operator>>(std::istream &in, Matrix &m);
-  Matrix operator+(Matrix &m);
-  Matrix operator-(Matrix &m);
-  Matrix operator*(Matrix &m);
-  Matrix operator=(Matrix const &m);
+  Matrix operator+(const Matrix &m) const;
+  Matrix operator-(const Matrix &m) const;
+  Matrix operator*(const Matrix &m) const;
+  Matrix& operator=(const Matrix &m);
   Matrix transpose();
   const std::vector<std::vector<double>> &getMatrix() const;
   int getCols() const;
   int getRows() const;
-  double get(int row, int col);
+  double get(int row, int col) const;
   void set(int row, int col, double value);
   void setMatrix(std::vector<std::vector<double>> matrix);
   Matrix inverseMatrix(Matrix &A, int n);

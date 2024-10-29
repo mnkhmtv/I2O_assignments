@@ -1,18 +1,20 @@
-#include "../src/InteriorPoint.h"
-#include "../src/Matrix.h"
 #include <gtest/gtest.h>
+
 #include <iostream>
 #include <sstream>
 
-// Helper function to capture stdout
+#include "../src/InteriorPoint.h"
+#include "../src/Matrix.h"
+
+
 std::string captureStdout(std::function<void()> func) {
   std::ostringstream oss;
   std::streambuf *oldCoutBuffer = std::cout.rdbuf(oss.rdbuf());
 
-  func(); // Execute the function
+  func();
 
-  std::cout.rdbuf(oldCoutBuffer); // Restore the old buffer
-  return oss.str();               // Return captured output
+  std::cout.rdbuf(oldCoutBuffer);
+  return oss.str();
 }
 
 TEST(InteriorPointTest, SolveAndPrintResultsTest) {
@@ -20,38 +22,27 @@ TEST(InteriorPointTest, SolveAndPrintResultsTest) {
   std::vector<std::vector<double>> startingPointMatrix = {{1}, {1}, {1}};
   startingPoint.setMatrix(startingPointMatrix);
 
-  // Create test data for vector C, matrix A, and vector b
-  Matrix C(3, 1); // Objective function vector
+  Matrix C(3, 1);
   std::vector<std::vector<double>> CMatrix = {{2}, {5}, {7}};
   C.setMatrix(CMatrix);
 
-  Matrix A(1, 3); // Constraint matrix
+  Matrix A(1, 3);
   std::vector<std::vector<double>> AMatrix = {{1, 2, 3}};
   A.setMatrix(AMatrix);
 
-  Matrix b(1, 1); // Right-hand side vector
+  Matrix b(1, 1);
   std::vector<std::vector<double>> bMatrix = {{6}};
   b.setMatrix(bMatrix);
 
-  // Expected output from printResults
-  std::string expected_output = "Optimal solution: \n"
-                                "0.78 \n"
-                                "3.48 \n"
-                                "0.50 \n"
-                                "2.23 \n"
-                                "Z: 4.26\n";
+  std::string expected_output =
+      "Optimal solution: x = [\n2.14577e-07 \n3 \n2.14577e-07 \n]\nZ: 15\n";
 
-  // Create an instance of InteriorPoint
   InteriorPoint ip(0.5, 1e-6);
   ip.readProblem(startingPoint, C, A, b);
-  ip.solve(); // Execute solve method
+  ip.solve();
 
-  // Capture output of printResults after solve
-  std::string output = captureStdout([&]() {
-    ip.printResults(); // Print results
-  });
+  std::string output = captureStdout([&]() { ip.printResults(); });
 
-  // Verify output matches expected
   EXPECT_EQ(output, expected_output);
 }
 

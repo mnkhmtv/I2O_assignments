@@ -6,6 +6,8 @@
 #include <complex>
 #include <iomanip>
 #include <iostream>
+#include <memory>
+#include <utility>
 
 Matrix::Matrix(int rows, int cols) {
   this->rows = rows;
@@ -34,7 +36,7 @@ Matrix::Matrix(int i) {
 
 void Matrix::set(int row, int col, double value) { matrix[row][col] = value; }
 
-double Matrix::get(int row, int col) { return matrix[row][col]; }
+double Matrix::get(int row, int col) const { return matrix[row][col]; }
 
 int Matrix::getRows() const { return rows; }
 
@@ -63,57 +65,59 @@ std::istream &operator>>(std::istream &in, Matrix &m) {
   return in;
 }
 
-Matrix Matrix::operator+(Matrix &m) {
-  Matrix result(rows, cols);
-  if (m.rows != rows || m.cols != cols) {
-    throw "Error";
-  }
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      result.set(i, j, matrix[i][j] + m.get(i, j));
+Matrix Matrix::operator+(const Matrix &m) const {
+    Matrix result(rows, cols);
+    if (m.rows != rows || m.cols != cols) {
+        throw "Error";
     }
-  }
-  return result;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result.set(i, j, matrix[i][j] + m.get(i, j));
+        }
+    }
+    return result;
 }
 
-Matrix Matrix::operator-(Matrix &m) {
-  Matrix result(rows, cols);
-  if (m.rows != rows || m.cols != cols) {
-    throw "Error";
-  }
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < cols; j++) {
-      result.set(i, j, matrix[i][j] - m.get(i, j));
+Matrix Matrix::operator-(const Matrix &m) const {
+    Matrix result(rows, cols);
+    if (m.rows != rows || m.cols != cols) {
+        throw "Error";
     }
-  }
-  return result;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < cols; j++) {
+            result.set(i, j, matrix[i][j] - m.get(i, j));
+        }
+    }
+    return result;
 }
 
-Matrix Matrix::operator*(Matrix &m) {
-  Matrix result(rows, m.cols);
-  if (m.rows != cols) {
-    throw "Error";
-  }
-  for (int i = 0; i < rows; i++) {
-    for (int j = 0; j < m.cols; j++) {
-      for (int k = 0; k < cols; k++) {
-        result.set(i, j, result.get(i, j) + matrix[i][k] * m.get(k, j));
-      }
+Matrix Matrix::operator*(const Matrix &m) const {
+    Matrix result(rows, m.cols);
+    if (m.rows != cols) {
+        throw "Error";
     }
-  }
-  return result;
+    for (int i = 0; i < rows; i++) {
+        for (int j = 0; j < m.cols; j++) {
+            for (int k = 0; k < cols; k++) {
+                result.set(i, j, result.get(i, j) + matrix[i][k] * m.get(k, j));
+            }
+        }
+    }
+    return result;
 }
 
-Matrix Matrix::operator=(const Matrix &m) {
-  rows = m.rows;
-  cols = m.cols;
-  matrix = m.matrix;
-  return *this;
+Matrix& Matrix::operator=(const Matrix &m) {
+    if (this != &m) {
+        rows = m.rows;
+        cols = m.cols;
+        matrix = m.matrix;
+    }
+    return *this;
 }
 
 Matrix Matrix::transpose() {
-  Matrix result(cols, rows);
-  for (int i = 0; i < cols; i++) {
+    Matrix result(cols, rows);
+    for (int i = 0; i < cols; i++) {
     for (int j = 0; j < rows; j++) {
       result.set(i, j, matrix[j][i]);
     }
@@ -123,7 +127,7 @@ Matrix Matrix::transpose() {
 Matrix Matrix::inverseMatrix(Matrix &A, int n) {
   int permutation = 0;
   int step = 0;
-  auto *I = new Matrix(n);
+  std::unique_ptr<Matrix> I = std::make_unique<Matrix>(n);
 
   Matrix B = A;
   // check singularity

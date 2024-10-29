@@ -2,6 +2,13 @@
 
 This project implements the Interior Point Method for solving linear programming problems. 
 
+### A vector of decision variables - x by Interior-Point algorithm (when α = 0.5 and α = 0.9) and by Simplex method from programming Task 1
+
+```bash
+g++ src/main.cpp src/Matrix.cpp src/InteriorPoint.cpp src/Simplex/Simplex.cpp -o main
+./main
+```
+
 ## Getting Started
 
 ### Building the Project
