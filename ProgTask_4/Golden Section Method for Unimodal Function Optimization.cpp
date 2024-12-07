@@ -14,7 +14,7 @@ void golden_section_method(double a, double b, double tolerance) {
     double lambda, mu;        // Points to evaluate
     double f_lambda, f_mu;    // Function values at lambda and mu
 
-    cout << fixed << setprecision(5);
+    //cout << fixed << setprecision(5);
 
     while ((b - a) >= tolerance) {
         lambda = a + (1 - phi) * (b - a);
