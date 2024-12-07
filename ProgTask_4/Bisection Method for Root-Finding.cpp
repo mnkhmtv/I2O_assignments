@@ -20,8 +20,8 @@ double bisection_method(function<double(double)> f, double a, double b, double t
         c = (a + b) / 2;
 
         // Debug output for each iteration
-        cout << "Iteration " << iteration << ": Interval = [" << a << ", " << b
-             << "], c = " << c << ", f(c) = " << f(c) << endl;
+        //cout << "Iteration " << iteration << ": Interval = [" << a << ", " << b
+        //     << "], c = " << c << ", f(c) = " << f(c) << endl;
 
         // Check if the midpoint is the root or meets the tolerance condition
         if (fabs(f(c)) < tolerance) {
